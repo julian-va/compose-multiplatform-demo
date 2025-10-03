@@ -14,16 +14,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.login.LoginViewModel
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.login.UiState
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 object Login
 
 @Composable
-fun Login(viewModel: LoginViewModel = viewModel { LoginViewModel() }) {
+fun Login(viewModel: LoginViewModel = koinViewModel()) {
     val state: UiState = viewModel.state
     var user by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
