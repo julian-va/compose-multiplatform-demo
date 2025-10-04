@@ -12,7 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 object TestCompose
 
 @Composable
-fun TestComposeKtor(vm: TestComposeKtorVieModel = koinViewModel()): Unit {
+fun TestComposeKtor(vm: TestComposeKtorVieModel = koinViewModel()) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(vm.state.size) { index ->
             Text(text = vm.state[index].title)

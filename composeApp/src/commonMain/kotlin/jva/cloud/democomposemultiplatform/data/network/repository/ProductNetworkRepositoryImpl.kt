@@ -14,7 +14,7 @@ class ProductNetworkRepositoryImpl(private val client: HttpClient) : ProductNetw
         val response: HttpResponse =
             client.get(urlString = "products")
         if (response.status.value in 200..299) {
-            var productNetworkEntity: List<ProductNetworkEntity> = response.body()
+            val productNetworkEntity: List<ProductNetworkEntity> = response.body()
             return productNetworkEntity.map { productNetworkEntity -> productNetworkEntity.toDomain() }
         } else {
             throw Exception("Error: ${response.status.value}")
