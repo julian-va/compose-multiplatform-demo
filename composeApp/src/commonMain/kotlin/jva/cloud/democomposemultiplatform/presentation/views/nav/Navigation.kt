@@ -10,13 +10,14 @@ import jva.cloud.democomposemultiplatform.presentation.views.home.HomeView
 import jva.cloud.democomposemultiplatform.presentation.views.homedetail.HomeDetail
 import jva.cloud.democomposemultiplatform.presentation.views.homedetail.HomeDetailView
 import jva.cloud.democomposemultiplatform.presentation.views.login.Login
+import jva.cloud.democomposemultiplatform.presentation.views.login.LoginView
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Home) {
-        composable<Login> { Login() }
+    NavHost(navController = navController, startDestination = Login) {
+        composable<Login> { LoginView(redirectHome = { navController.navigate(Home) }) }
 
         composable<Home> { HomeView(goToDetail = { navController.navigate(HomeDetail(id = it)) }) }
 

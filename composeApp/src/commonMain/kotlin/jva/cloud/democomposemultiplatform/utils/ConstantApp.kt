@@ -10,6 +10,14 @@ object ConstantApp {
     const val CONNECT_TIMEOUT_MILLIS = 2000L
     const val SOCKET_TIMEOUT_MILLIS = 2000L
     const val KTOR_LOGGER = "Ktor Logger"
+
+    //ktor-product
     const val ENDPOINT_PRODUCTS = "/api/v1/products"
 
+    //ktor-auth
+    const val ENDPOINT_LOGIN = "/api/v1/auth/login"
+
+    //App
+    const val ONE = 1
+    const val STRING_EMPTY: String = ""
 }

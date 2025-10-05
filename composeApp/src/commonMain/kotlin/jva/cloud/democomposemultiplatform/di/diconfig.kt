@@ -14,11 +14,15 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import jva.cloud.democomposemultiplatform.data.network.repository.ProductNetworkRepositoryImpl
+import jva.cloud.democomposemultiplatform.data.network.repository.UserNetworkRepositoryImpl
 import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkRepository
+import jva.cloud.democomposemultiplatform.domain.repository.UserNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverProductFromRemote
+import jva.cloud.democomposemultiplatform.domain.usecase.SignInUser
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverAllProductFromRemoteImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverProductFromRemoteImpl
+import jva.cloud.democomposemultiplatform.domain.usecase.impl.SignInUserImpl
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.homedetail.HomeDetailVieModel
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.login.LoginViewModel
@@ -46,11 +50,21 @@ val repositoryModule = module {
     single<ProductNetworkRepository> {
         ProductNetworkRepositoryImpl(get(qualifier = named(QUALIFIER_FAKE_API_CLIENT)))
     }
+    single<UserNetworkRepository> {
+        UserNetworkRepositoryImpl(
+            get(
+                qualifier = named(
+                    QUALIFIER_FAKE_API_CLIENT
+                )
+            )
+        )
+    }
 }
 
 val useCaseModule = module {
     factory<RetrieverAllProductFromRemote> { RetrieverAllProductFromRemoteImpl(get()) }
     factory<RetrieverProductFromRemote> { RetrieverProductFromRemoteImpl(get()) }
+    factory<SignInUser> { SignInUserImpl(get()) }
 }
 val viewModelModulo = module {
     viewModelOf(::LoginViewModel)
