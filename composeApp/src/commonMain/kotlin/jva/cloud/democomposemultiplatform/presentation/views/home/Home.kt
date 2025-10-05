@@ -23,11 +23,14 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import democomposemultiplatform.composeapp.generated.resources.Res
+import democomposemultiplatform.composeapp.generated.resources.products_title
 import jva.cloud.democomposemultiplatform.domain.model.Product
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
 import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageFromApi
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
@@ -42,7 +45,10 @@ fun HomeView(goToDetail: (Int) -> Unit, vm: HomeVieMode = koinViewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
-            TopAppBar(title = { Text(text = "Home") }, scrollBehavior = scrollBehavior)
+            TopAppBar(
+                title = { Text(text = stringResource(Res.string.products_title)) },
+                scrollBehavior = scrollBehavior
+            )
         }) { paddingValues ->
         LoadingIndicator(enabled = state.isLoading, modifier = Modifier.padding(paddingValues))
         LazyVerticalGrid(

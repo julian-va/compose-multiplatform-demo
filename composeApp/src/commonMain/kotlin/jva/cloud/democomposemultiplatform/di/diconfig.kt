@@ -16,10 +16,18 @@ import io.ktor.serialization.kotlinx.json.json
 import jva.cloud.democomposemultiplatform.data.network.repository.ProductNetworkRepositoryImpl
 import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
+import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverAllProductFromRemoteImpl
+import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverProductFromRemoteImpl
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.homedetail.HomeDetailVieModel
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.login.LoginViewModel
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.BASE_URL_HOST_FAKE_API
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.CONNECT_TIMEOUT_MILLIS
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.KTOR_LOGGER
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.QUALIFIER_FAKE_API_CLIENT
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.REQUEST_TIMEOUT_MILLIS
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.SOCKET_TIMEOUT_MILLIS
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -29,19 +37,20 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val clientHttpModule = module {
-    single<HttpClient>(named("FakeApiClient")) {
+    single<HttpClient>(named(QUALIFIER_FAKE_API_CLIENT)) {
         createHttpClientFakeApi(get())
     }
 }
 
 val repositoryModule = module {
     single<ProductNetworkRepository> {
-        ProductNetworkRepositoryImpl(get(qualifier = named("FakeApiClient")))
+        ProductNetworkRepositoryImpl(get(qualifier = named(QUALIFIER_FAKE_API_CLIENT)))
     }
 }
 
 val useCaseModule = module {
     factory<RetrieverAllProductFromRemote> { RetrieverAllProductFromRemoteImpl(get()) }
+    factory<RetrieverProductFromRemote> { RetrieverProductFromRemoteImpl(get()) }
 }
 val viewModelModulo = module {
     viewModelOf(::LoginViewModel)
@@ -69,20 +78,20 @@ private fun createHttpClientFakeApi(engine: HttpClientEngine): HttpClient {
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    println("Ktor Logger: $message")
+                    println("$KTOR_LOGGER: $message")
                 }
             }
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 2000L
-            connectTimeoutMillis = 2000L
-            socketTimeoutMillis = 2000L
+            requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
+            connectTimeoutMillis = CONNECT_TIMEOUT_MILLIS
+            socketTimeoutMillis = SOCKET_TIMEOUT_MILLIS
         }
         install(DefaultRequest) {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
             url {
                 protocol = URLProtocol.HTTPS
-                host = "api.escuelajs.co"
+                host = BASE_URL_HOST_FAKE_API
             }
         }
         install(ContentNegotiation) {
