@@ -3,4 +3,18 @@
     <string name="products_title">Products</string>
     <string name="product_details_title">Product Details</string>
     <string name="back_content_description">Back</string>
+    <string name="ok_button_text">OK</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="info_icon_content_description">Information</string>
+    <string name="hide_password_content_description">Hide password</string>
+    <string name="show_password_content_description">Show password</string>
+    <string name="login_title">Sign in to App</string>
+    <string name="user_label">User</string>
+    <string name="password_label">Password</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="new_to_app_text">New to App?</string>
+    <string name="create_account_text">Create an account</string>
+    <string name="login_error_invalid_credentials">Incorrect username or password</string>
+    <string name="login_error_empty_fields">Username or password cannot be empty</string>
+    <string name="error_title">Error</string>
 </resources>
