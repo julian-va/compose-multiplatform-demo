@@ -12,7 +12,7 @@ import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkReposi
 class ProductNetworkRepositoryImpl(private val client: HttpClient) : ProductNetworkRepository {
     override suspend fun retrieveAllProducts(): List<Product> {
         val response: HttpResponse =
-            client.get(urlString = "products")
+            client.get(urlString = "/api/v1/products")
         if (response.status.value in 200..299) {
             val productNetworkEntity: List<ProductNetworkEntity> = response.body()
             return productNetworkEntity.map { productNetworkEntity -> productNetworkEntity.toDomain() }

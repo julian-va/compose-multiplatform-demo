@@ -1,4 +1,4 @@
-package jva.cloud.democomposemultiplatform.presentation.views
+package jva.cloud.democomposemultiplatform.presentation.viewmodel.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,17 +9,19 @@ import jva.cloud.democomposemultiplatform.domain.model.Product
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
 import kotlinx.coroutines.launch
 
-class TestComposeKtorVieModel(private val usacase: RetrieverAllProductFromRemote) : ViewModel() {
-    var state by mutableStateOf<List<Product>>(emptyList())
+class HomeVieMode(private val retrieverProducts: RetrieverAllProductFromRemote) : ViewModel() {
+    var state by mutableStateOf(HomeVieModelState())
         private set
 
     init {
-        retriverAllProduct()
+        retrieverAllProduct()
     }
 
-    fun retriverAllProduct() {
+    fun retrieverAllProduct() {
         viewModelScope.launch {
-            state = usacase.retrieveAllProducts()
+            val products: List<Product> = retrieverProducts.retrieveAllProducts()
+            state = state.copy(isLoading = false, products = products)
         }
     }
+
 }

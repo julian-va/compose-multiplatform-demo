@@ -17,8 +17,9 @@ import jva.cloud.democomposemultiplatform.data.network.repository.ProductNetwork
 import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverAllProductFromRemoteImpl
+import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
+import jva.cloud.democomposemultiplatform.presentation.viewmodel.homedetail.HomeDetailVieModel
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.login.LoginViewModel
-import jva.cloud.democomposemultiplatform.presentation.views.TestComposeKtorVieModel
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -44,14 +45,21 @@ val useCaseModule = module {
 }
 val viewModelModulo = module {
     viewModelOf(::LoginViewModel)
-    viewModelOf(::TestComposeKtorVieModel)
+    viewModelOf(::HomeVieMode)
+    viewModelOf(::HomeDetailVieModel)
 }
 
 expect val platformModule: Module
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
-        modules(platformModule, clientHttpModule, repositoryModule, useCaseModule, viewModelModulo)
+        modules(
+            platformModule,
+            clientHttpModule,
+            repositoryModule,
+            useCaseModule,
+            viewModelModulo
+        )
     }
 }
 
@@ -74,7 +82,7 @@ private fun createHttpClientFakeApi(engine: HttpClientEngine): HttpClient {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
             url {
                 protocol = URLProtocol.HTTPS
-                host = "api.escuelajs.co/api/v1"
+                host = "api.escuelajs.co"
             }
         }
         install(ContentNegotiation) {
