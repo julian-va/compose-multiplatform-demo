@@ -1,6 +1,5 @@
 package jva.cloud.democomposemultiplatform.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -22,7 +21,7 @@ internal fun MyAlertDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    AnimatedVisibility(visible = showDialog) {
+    if (showDialog) {
         AlertDialog(
             onDismissRequest = { onDismiss() },
             confirmButton = {

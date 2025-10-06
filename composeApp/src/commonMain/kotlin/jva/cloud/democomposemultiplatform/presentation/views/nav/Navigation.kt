@@ -19,10 +19,14 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Login) {
-        composable<Login> { LoginView(redirectHome = { navController.navigate(Home) }) }
+        composable<Login> {
+            LoginView(
+                redirectHome = { navController.navigate(Home) },
+                redirectCreateAccount = { navController.navigate(CreateAccount) })
+        }
 
-        composable<CreateAccount> { CreateAccountView() }
-        
+        composable<CreateAccount> { CreateAccountView(onSignIn = { navController.navigate(Login) }) }
+
         composable<Home> { HomeView(goToDetail = { navController.navigate(HomeDetail(id = it)) }) }
 
         composable<HomeDetail> { backStackEntry ->

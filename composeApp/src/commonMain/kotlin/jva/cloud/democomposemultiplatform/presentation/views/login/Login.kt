@@ -45,7 +45,11 @@ import org.koin.compose.viewmodel.koinViewModel
 object Login
 
 @Composable
-fun LoginView(redirectHome: () -> Unit, viewModel: LoginViewModel = koinViewModel()) {
+fun LoginView(
+    redirectHome: () -> Unit,
+    redirectCreateAccount: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel()
+) {
     val state: LoginViewModelState = viewModel.state
     val errorMessage = getErrorMessage(loginError = state.loginError)
 
@@ -100,7 +104,7 @@ fun LoginView(redirectHome: () -> Unit, viewModel: LoginViewModel = koinViewMode
             Text(text = stringResource(Res.string.new_to_app_text))
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                modifier = Modifier.clickable(onClick = { }),
+                modifier = Modifier.clickable(onClick = { redirectCreateAccount() }),
                 text = stringResource(Res.string.create_account_text),
                 color = MaterialTheme.colorScheme.primary
             )

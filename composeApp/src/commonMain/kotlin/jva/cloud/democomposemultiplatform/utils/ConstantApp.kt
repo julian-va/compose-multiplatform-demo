@@ -17,7 +17,11 @@ object ConstantApp {
     //ktor-auth
     const val ENDPOINT_LOGIN = "/api/v1/auth/login"
 
+    //ktor-user
+    const val ENDPOINT_USERS = "/api/v1/users"
+
     //App
     const val ONE = 1
     const val STRING_EMPTY: String = ""
+    const val DEFAULT_AVATAR_URL = "https://i.imgur.com/yhW6Yw1.jpg"
 }
