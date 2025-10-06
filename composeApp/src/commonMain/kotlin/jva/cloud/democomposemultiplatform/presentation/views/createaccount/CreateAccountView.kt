@@ -109,7 +109,7 @@ fun CreateAccountView() {
             )
 
             MyButton(
-                text = stringResource(Res.string.create_account_button), enabled = true, onClick = {},
+                text = stringResource(Res.string.create_account_button), onClick = {},
                 modifier = Modifier.align(Alignment.CenterHorizontally)
                     .fillMaxWidth().padding(bottom = 30.dp, top = 30.dp)
             )
@@ -120,7 +120,10 @@ fun CreateAccountView() {
             ) {
                 Text(text = stringResource(Res.string.already_have_account_text))
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = stringResource(Res.string.sign_in_link), color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = stringResource(Res.string.sign_in_link),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
@@ -129,12 +132,10 @@ fun CreateAccountView() {
 @Composable
 private fun MyButton(
     text: String,
-    enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
-        enabled = enabled,
         onClick = { onClick() },
         modifier = modifier,
         shape = RoundedCornerShape(8.dp)
