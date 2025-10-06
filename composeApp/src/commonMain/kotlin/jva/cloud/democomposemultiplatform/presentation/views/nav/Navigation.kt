@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import jva.cloud.democomposemultiplatform.presentation.views.createaccount.CreateAccount
+import jva.cloud.democomposemultiplatform.presentation.views.createaccount.CreateAccountView
 import jva.cloud.democomposemultiplatform.presentation.views.home.Home
 import jva.cloud.democomposemultiplatform.presentation.views.home.HomeView
 import jva.cloud.democomposemultiplatform.presentation.views.homedetail.HomeDetail
@@ -19,6 +21,8 @@ fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Login) {
         composable<Login> { LoginView(redirectHome = { navController.navigate(Home) }) }
 
+        composable<CreateAccount> { CreateAccountView() }
+        
         composable<Home> { HomeView(goToDetail = { navController.navigate(HomeDetail(id = it)) }) }
 
         composable<HomeDetail> { backStackEntry ->
