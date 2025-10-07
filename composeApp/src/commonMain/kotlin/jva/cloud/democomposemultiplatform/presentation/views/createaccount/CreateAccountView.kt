@@ -10,13 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,9 +40,13 @@ import democomposemultiplatform.composeapp.generated.resources.sign_up_subtitle
 import democomposemultiplatform.composeapp.generated.resources.success_title
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
 import jva.cloud.democomposemultiplatform.presentation.components.MyAlertDialog
+import jva.cloud.democomposemultiplatform.presentation.components.MyButton
 import jva.cloud.democomposemultiplatform.presentation.components.MyOutLinedTextField
+import jva.cloud.democomposemultiplatform.presentation.components.SectionHeader
+import jva.cloud.democomposemultiplatform.presentation.components.model.AlertType
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.createaccount.CreateAccountError
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.createaccount.CreateAccountViewModel
+import jva.cloud.democomposemultiplatform.presentation.viewmodel.createaccount.CreateAccountViewModelState
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.STRING_EMPTY
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -57,110 +58,100 @@ object CreateAccount
 @Composable
 fun CreateAccountView(onSignIn: () -> Unit, vm: CreateAccountViewModel = koinViewModel()) {
     val state = vm.state
-    val errorMessage = getErrorMessage(error = state.createAccountError)
-    val titleAlertDialog = getTitleAlertDialog(error = state.createAccountError)
-
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(enabled = state.isLoading, modifier = Modifier)
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp)
+        CreateAccountForm(state, vm, onSignIn)
+    }
+}
+
+@Composable
+private fun CreateAccountForm(
+    state: CreateAccountViewModelState,
+    vm: CreateAccountViewModel,
+    onSignIn: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 30.dp)
+    ) {
+        Text(
+            text = stringResource(Res.string.create_account_title),
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(vertical = 35.dp)
+                .align(alignment = Alignment.CenterHorizontally)
+        )
+
+        Text(
+            text = stringResource(Res.string.sign_up_subtitle),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(vertical = 35.dp)
+        )
+
+        SectionHeader(
+            text = stringResource(Res.string.name_label),
+            icon = Icons.Default.Person
+        )
+        MyOutLinedTextField(
+            text = state.user,
+            label = stringResource(Res.string.full_name_placeholder),
+            onValueChange = { vm.updateParameterStatus(user = it) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        SectionHeader(
+            text = stringResource(Res.string.email_label),
+            icon = Icons.Default.Email,
+            modifier = Modifier.padding(bottom = 5.dp, top = 25.dp)
+        )
+        MyOutLinedTextField(
+            text = state.email,
+            label = stringResource(Res.string.email_placeholder),
+            onValueChange = { vm.updateParameterStatus(email = it) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        SectionHeader(
+            text = stringResource(Res.string.password_label),
+            icon = Icons.Default.Lock,
+            modifier = Modifier.padding(bottom = 5.dp, top = 25.dp)
+        )
+        MyOutLinedTextField(
+            text = state.password,
+            label = stringResource(Res.string.password_placeholder),
+            onValueChange = { vm.updateParameterStatus(password = it) },
+            isPasswordField = true, modifier = Modifier.fillMaxWidth()
+        )
+
+        MyButton(
+            text = stringResource(Res.string.create_account_button),
+            enabled = true,
+            onClick = { vm.createAccount() },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+                .fillMaxWidth().padding(bottom = 30.dp, top = 30.dp)
+        )
+
+        Row(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.Center
         ) {
+            Text(text = stringResource(Res.string.already_have_account_text))
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stringResource(Res.string.create_account_title),
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(vertical = 35.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-            )
-
-            Text(
-                text = stringResource(Res.string.sign_up_subtitle),
-                style = MaterialTheme.typography.titleMedium,
+                text = stringResource(Res.string.sign_in_link),
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(vertical = 35.dp)
-            )
-
-            Row(
-                modifier = Modifier.padding(bottom = 5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = stringResource(Res.string.name_label)
-                )
-                Text(text = stringResource(Res.string.name_label))
-            }
-            MyOutLinedTextField(
-                text = state.user,
-                label = stringResource(Res.string.full_name_placeholder),
-                onValueChange = { vm.updateParameterStatus(user = it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Row(
-                modifier = Modifier.padding(bottom = 5.dp, top = 25.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = stringResource(Res.string.email_label)
-                )
-                Text(text = stringResource(Res.string.email_label))
-            }
-            MyOutLinedTextField(
-                text = state.email,
-                label = stringResource(Res.string.email_placeholder),
-                onValueChange = { vm.updateParameterStatus(email = it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Row(
-                modifier = Modifier.padding(bottom = 5.dp, top = 25.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = stringResource(Res.string.password_label)
-                )
-                Text(text = stringResource(Res.string.password_label))
-            }
-            MyOutLinedTextField(
-                text = state.password,
-                label = stringResource(Res.string.password_placeholder),
-                onValueChange = { vm.updateParameterStatus(password = it) },
-                isPasswordField = true, modifier = Modifier.fillMaxWidth()
-            )
-
-            MyButton(
-                text = stringResource(Res.string.create_account_button),
-                onClick = { vm.createAccount() },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-                    .fillMaxWidth().padding(bottom = 30.dp, top = 30.dp)
-            )
-
-            Row(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = stringResource(Res.string.already_have_account_text))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = stringResource(Res.string.sign_in_link),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable(onClick = { onSignIn() })
-                )
-            }
-            MyAlertDialog(
-                showDialog = state.showDialog && errorMessage.isNotEmpty(),
-                title = titleAlertDialog,
-                text = errorMessage,
-                onDismiss = { vm.onDialogDismiss() },
-                onConfirm = { vm.onDialogDismiss() }
+                modifier = Modifier.clickable(onClick = { onSignIn() })
             )
         }
+        MyAlertDialog(
+            showDialog = state.showDialog,
+            title = getTitleAlertDialog(error = state.createAccountError),
+            text = getErrorMessage(error = state.createAccountError),
+            alertType = getAlertType(error = state.createAccountError),
+            onDismiss = { vm.onDialogDismiss() },
+            onConfirm = { vm.onDialogDismiss() }
+        )
     }
 }
 
@@ -185,22 +176,11 @@ private fun getTitleAlertDialog(error: CreateAccountError): String {
 }
 
 @Composable
-private fun MyButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = { onClick() },
-        modifier = modifier,
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Text(text = text)
+private fun getAlertType(error: CreateAccountError): AlertType {
+    return when (error) {
+        CreateAccountError.EMPTY_FIELDS -> AlertType.ERROR
+        CreateAccountError.ACCOUNT_CREATED -> AlertType.SUCCESS
+        CreateAccountError.ACCOUNT_CREATED_ERROR -> AlertType.ERROR
+        CreateAccountError.OK -> AlertType.INFO
     }
 }
-
-/*@Preview(showBackground = true)
-@Composable
-fun CreateAccountViewPreview() {
-    CreateAccountView()
-}**/
