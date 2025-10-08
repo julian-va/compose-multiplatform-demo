@@ -1,5 +1,8 @@
 package jva.cloud.democomposemultiplatform.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.DefaultRequest
@@ -13,8 +16,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
+import jva.cloud.democomposemultiplatform.data.local.repository.DateStoreRepositoryImpl
 import jva.cloud.democomposemultiplatform.data.network.repository.ProductNetworkRepositoryImpl
 import jva.cloud.democomposemultiplatform.data.network.repository.UserNetworkRepositoryImpl
+import jva.cloud.democomposemultiplatform.domain.repository.DateStoreRepository
 import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.repository.UserNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.usecase.CreateUser
@@ -32,10 +37,12 @@ import jva.cloud.democomposemultiplatform.presentation.viewmodel.login.LoginView
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.BASE_URL_HOST_FAKE_API
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.CONNECT_TIMEOUT_MILLIS
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.KTOR_LOGGER
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.QUALIFIER_DATASTORE_PATH
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.QUALIFIER_FAKE_API_CLIENT
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.REQUEST_TIMEOUT_MILLIS
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.SOCKET_TIMEOUT_MILLIS
 import kotlinx.serialization.json.Json
+import okio.Path.Companion.toPath
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
@@ -46,6 +53,12 @@ import org.koin.dsl.module
 val clientHttpModule = module {
     single<HttpClient>(named(QUALIFIER_FAKE_API_CLIENT)) {
         createHttpClientFakeApi(get())
+    }
+}
+
+val dataStoreModule = module {
+    single<DataStore<Preferences>> {
+        createDataStore { get<String>(qualifier = QUALIFIER_DATASTORE_PATH) }
     }
 }
 
@@ -62,13 +75,24 @@ val repositoryModule = module {
             )
         )
     }
+    single<DateStoreRepository> { DateStoreRepositoryImpl(get()) }
 }
 
 val useCaseModule = module {
     factory<RetrieverAllProductFromRemote> { RetrieverAllProductFromRemoteImpl(get()) }
     factory<RetrieverProductFromRemote> { RetrieverProductFromRemoteImpl(get()) }
-    factory<SignInUser> { SignInUserImpl(get()) }
-    factory<CreateUser> { CreateUserImpl(get()) }
+    factory<SignInUser> {
+        SignInUserImpl(
+            userNetworkRepository = get(),
+            dateStoreRepository = get()
+        )
+    }
+    factory<CreateUser> {
+        CreateUserImpl(
+            userNetworkRepository = get(),
+            dateStoreRepository = get()
+        )
+    }
 
 }
 val viewModelModulo = module {
@@ -85,6 +109,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         modules(
             platformModule,
             clientHttpModule,
+            dataStoreModule,
             repositoryModule,
             useCaseModule,
             viewModelModulo
@@ -123,3 +148,8 @@ private fun createHttpClientFakeApi(engine: HttpClientEngine): HttpClient {
         }
     }
 }
+
+fun createDataStore(producePath: () -> String): DataStore<Preferences> =
+    PreferenceDataStoreFactory.createWithPath(
+        produceFile = { producePath().toPath() }
+    )
