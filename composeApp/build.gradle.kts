@@ -58,6 +58,8 @@ kotlin {
             implementation(libs.ktor.client.contentnegotiation)
             implementation(libs.ktor.client.serialization.json)
             implementation(libs.ktor.client.logging)
+            api(libs.androidx.datastore.core)
+            api(libs.androidx.datastore.preferences)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

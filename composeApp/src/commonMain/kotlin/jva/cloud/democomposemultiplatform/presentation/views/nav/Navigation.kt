@@ -27,7 +27,11 @@ fun Navigation(navController: NavHostController) {
 
         composable<CreateAccount> { CreateAccountView(onSignIn = { navController.navigate(Login) }) }
 
-        composable<Home> { HomeView(goToDetail = { navController.navigate(HomeDetail(id = it)) }) }
+        composable<Home> {
+            HomeView(
+                goToDetail = { navController.navigate(HomeDetail(id = it)) },
+                goToLogin = { navController.navigate(Login) })
+        }
 
         composable<HomeDetail> { backStackEntry ->
             val homeDetail = backStackEntry.toRoute<HomeDetail>()

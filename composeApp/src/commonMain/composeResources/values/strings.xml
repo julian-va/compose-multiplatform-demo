@@ -33,4 +33,5 @@
     <string name="account_created_successfully">Account created successfully.</string>
     <string name="error_creating_account">There was an error creating the account.</string>
     <string name="success_title">Success!</string>
+    <string name="log_out_button">Log Out</string>
 </resources>

@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import democomposemultiplatform.composeapp.generated.resources.Res
+import democomposemultiplatform.composeapp.generated.resources.log_out_button
 import democomposemultiplatform.composeapp.generated.resources.products_title
 import jva.cloud.democomposemultiplatform.domain.model.Product
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
@@ -38,7 +43,7 @@ object Home
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(goToDetail: (Int) -> Unit, vm: HomeVieMode = koinViewModel()) {
+fun HomeView(goToDetail: (Int) -> Unit, goToLogin: () -> Unit, vm: HomeVieMode = koinViewModel()) {
     val state = vm.state
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -47,7 +52,17 @@ fun HomeView(goToDetail: (Int) -> Unit, vm: HomeVieMode = koinViewModel()) {
             .nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(Res.string.products_title)) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    IconButton(onClick = {
+                        goToLogin()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = stringResource(Res.string.log_out_button)
+                        )
+                    }
+                }
             )
         }) { paddingValues ->
         LoadingIndicator(enabled = state.isLoading, modifier = Modifier.padding(paddingValues))
