@@ -17,4 +17,21 @@
     <string name="login_error_invalid_credentials">Incorrect username or password</string>
     <string name="login_error_empty_fields">Username or password cannot be empty</string>
     <string name="error_title">Error</string>
+
+    <!-- Create Account Screen -->
+    <string name="create_account_title">Create Account</string>
+    <string name="sign_up_subtitle">Sign Up</string>
+    <string name="name_label">Name</string>
+    <string name="full_name_placeholder">Your Full Name</string>
+    <string name="email_label">Email</string>
+    <string name="email_placeholder">Your Email</string>
+    <string name="password_placeholder">Your Password</string>
+    <string name="create_account_button">Create Account</string>
+    <string name="already_have_account_text">Already have an account?</string>
+    <string name="sign_in_link">Sign In</string>
+    <string name="empty_fields_error">Some fields are empty and are required.</string>
+    <string name="account_created_successfully">Account created successfully.</string>
+    <string name="error_creating_account">There was an error creating the account.</string>
+    <string name="success_title">Success!</string>
+    <string name="log_out_button">Log Out</string>
 </resources>

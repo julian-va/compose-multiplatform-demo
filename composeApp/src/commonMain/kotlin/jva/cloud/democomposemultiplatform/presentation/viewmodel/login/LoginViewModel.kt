@@ -7,14 +7,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jva.cloud.democomposemultiplatform.domain.model.Credentials
 import jva.cloud.democomposemultiplatform.domain.model.Token
+import jva.cloud.democomposemultiplatform.domain.usecase.RememberSession
 import jva.cloud.democomposemultiplatform.domain.usecase.SignInUser
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.ONE
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.STRING_EMPTY
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val signInUser: SignInUser) : ViewModel() {
+class LoginViewModel(
+    private val signInUser: SignInUser,
+    private val rememberSession: RememberSession
+) : ViewModel() {
     var state by mutableStateOf(LoginViewModelState())
         private set
+
+    init {
+        viewModelScope.launch {
+            val rememberSession: Boolean = rememberSession.getRememberSession()
+            state = state.copy(rememberMe = rememberSession, loggedIn = rememberSession)
+        }
+    }
 
     fun login() {
 
@@ -36,6 +47,7 @@ class LoginViewModel(private val signInUser: SignInUser) : ViewModel() {
 
             result.onSuccess {
                 state = state.copy(loggedIn = true, isLoading = false)
+                rememberSession.setRememberSession(remember = state.rememberMe)
             }.onFailure {
                 state = state.copy(isLoading = false, loginError = LoginError.INVALID_CREDENTIALS)
                 openDialog()
@@ -48,6 +60,10 @@ class LoginViewModel(private val signInUser: SignInUser) : ViewModel() {
             user = updateUserAttributeField(user, state.user),
             password = updateUserAttributeField(password, state.password),
         )
+    }
+
+    fun updateRememberMeStatus() {
+        state = state.copy(rememberMe = !state.rememberMe)
     }
 
     private fun updateUserAttributeField(valueNew: String, valueOld: String): String {

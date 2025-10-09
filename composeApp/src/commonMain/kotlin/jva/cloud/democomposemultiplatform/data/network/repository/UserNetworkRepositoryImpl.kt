@@ -6,13 +6,18 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
+import jva.cloud.democomposemultiplatform.data.network.entity.CreatedUserNetworkEntity
 import jva.cloud.democomposemultiplatform.data.network.entity.TokenNetworkEntity
 import jva.cloud.democomposemultiplatform.data.network.mapper.toDomain
+import jva.cloud.democomposemultiplatform.data.network.mapper.toEntity
 import jva.cloud.democomposemultiplatform.data.network.mapper.toNetwork
+import jva.cloud.democomposemultiplatform.domain.model.CreatedUser
 import jva.cloud.democomposemultiplatform.domain.model.Credentials
 import jva.cloud.democomposemultiplatform.domain.model.Token
+import jva.cloud.democomposemultiplatform.domain.model.User
 import jva.cloud.democomposemultiplatform.domain.repository.UserNetworkRepository
 import jva.cloud.democomposemultiplatform.utils.ConstantApp.ENDPOINT_LOGIN
+import jva.cloud.democomposemultiplatform.utils.ConstantApp.ENDPOINT_USERS
 
 class UserNetworkRepositoryImpl(private val client: HttpClient) : UserNetworkRepository {
     companion object {
@@ -27,6 +32,23 @@ class UserNetworkRepositoryImpl(private val client: HttpClient) : UserNetworkRep
             if (response.status.isSuccess()) {
                 val tokenNetworkEntity: TokenNetworkEntity = response.body()
                 Result.success(tokenNetworkEntity.toDomain())
+            } else {
+                return Result.failure(Exception("$LOGIN_ERROR_MESSAGE${response.status.value}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(exception = e)
+
+        }
+    }
+
+    override suspend fun createUser(user: User): Result<CreatedUser> {
+        return try {
+            val response: HttpResponse = client.post(urlString = ENDPOINT_USERS) {
+                setBody(user.toEntity())
+            }
+            if (response.status.isSuccess()) {
+                val createdUserNetworkEntity: CreatedUserNetworkEntity = response.body()
+                Result.success(createdUserNetworkEntity.toDomain())
             } else {
                 return Result.failure(Exception("$LOGIN_ERROR_MESSAGE${response.status.value}"))
             }
