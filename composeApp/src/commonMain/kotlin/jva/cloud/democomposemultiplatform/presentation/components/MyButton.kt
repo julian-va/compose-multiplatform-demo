@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -22,6 +24,6 @@ internal fun MyButton(
         modifier = modifier,
         shape = shape
     ) {
-        Text(text = text)
+        Text(text = text, fontSize = TextUnit(18f, TextUnitType.Sp))
     }
 }

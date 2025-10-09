@@ -55,6 +55,7 @@ fun HomeView(goToDetail: (Int) -> Unit, goToLogin: () -> Unit, vm: HomeVieMode =
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(onClick = {
+                        vm.logOut()
                         goToLogin()
                     }) {
                         Icon(

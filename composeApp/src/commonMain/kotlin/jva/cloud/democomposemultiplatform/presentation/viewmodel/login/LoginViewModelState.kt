@@ -9,5 +9,6 @@ data class LoginViewModelState(
     val loginError: LoginError? = null,
     val enabledButtonLogin: Boolean = true,
     val user: String = STRING_EMPTY,
-    val password: String = STRING_EMPTY
+    val password: String = STRING_EMPTY,
+    val rememberMe: Boolean = false
 )

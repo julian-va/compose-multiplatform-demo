@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -81,8 +85,9 @@ private fun LoginForm(
 ) {
     Column(
         modifier = Modifier
+            .verticalScroll(state = rememberScrollState())
             .fillMaxWidth()
-            .padding(horizontal = 30.dp),
+            .padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -114,19 +119,32 @@ private fun LoginForm(
             modifier = Modifier.align(Alignment.Start).padding(start = 33.dp)
         )
         MyOutLinedTextField(
-            modifier = Modifier.padding(bottom = 25.dp),
+            modifier = Modifier.padding(bottom = 20.dp),
             text = state.password,
             label = stringResource(Res.string.password_label),
             onValueChange = { viewModel.updateParameterStatus(password = it) },
             isPasswordField = true
         )
+        Row(
+            modifier = Modifier.align(Alignment.Start).padding(start = 25.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                modifier = Modifier,
+                checked = state.rememberMe,
+                onCheckedChange = { viewModel.updateRememberMeStatus() })
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = "Remember me")
+
+
+        }
         MyButton(
             text = stringResource(Res.string.sign_in_button),
             enabled = state.enabledButtonLogin,
             onClick = { viewModel.login() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 30.dp)
+                .padding(horizontal = 30.dp).height(56.dp)
         )
 
         Row {

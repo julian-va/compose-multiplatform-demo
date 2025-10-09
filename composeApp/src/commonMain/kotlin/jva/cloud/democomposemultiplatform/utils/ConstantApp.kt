@@ -35,4 +35,9 @@ object ConstantApp {
     const val CURRENT_PASSWORD_KEY = "current_password_created"
     const val DEFAULT_USER_EMAIL = "john@mail.com"
     const val DEFAULT_USER_PASSWORD = "changeme"
+
+    // Remember Session
+    const val REMEMBER_SESSION_KEY = "remember"
+    const val REMEMBER_SESSION_TRUE = "true"
+    const val REMEMBER_SESSION_FALSE = "false"
 }

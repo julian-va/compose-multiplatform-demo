@@ -23,10 +23,14 @@ import jva.cloud.democomposemultiplatform.domain.repository.DateStoreRepository
 import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.repository.UserNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.usecase.CreateUser
+import jva.cloud.democomposemultiplatform.domain.usecase.LogOutUser
+import jva.cloud.democomposemultiplatform.domain.usecase.RememberSession
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.SignInUser
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.CreateUserImpl
+import jva.cloud.democomposemultiplatform.domain.usecase.impl.LogOutUserImpl
+import jva.cloud.democomposemultiplatform.domain.usecase.impl.RememberSessionImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverAllProductFromRemoteImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverProductFromRemoteImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.SignInUserImpl
@@ -81,6 +85,8 @@ val repositoryModule = module {
 val useCaseModule = module {
     factory<RetrieverAllProductFromRemote> { RetrieverAllProductFromRemoteImpl(get()) }
     factory<RetrieverProductFromRemote> { RetrieverProductFromRemoteImpl(get()) }
+    factory<LogOutUser> { LogOutUserImpl(dateStoreRepository = get(), rememberSession = get()) }
+    factory<RememberSession> { RememberSessionImpl(get()) }
     factory<SignInUser> {
         SignInUserImpl(
             userNetworkRepository = get(),
@@ -93,7 +99,6 @@ val useCaseModule = module {
             dateStoreRepository = get()
         )
     }
-
 }
 val viewModelModulo = module {
     viewModelOf(::LoginViewModel)
