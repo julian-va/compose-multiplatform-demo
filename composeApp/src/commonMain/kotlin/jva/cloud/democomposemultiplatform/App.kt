@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import jva.cloud.democomposemultiplatform.presentation.components.SetupImageLoader
 import jva.cloud.democomposemultiplatform.presentation.views.nav.Navigation
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-@Preview(showBackground = true)
 fun App() {
+    SetupImageLoader()
     val isDarkTheme = isSystemInDarkTheme()
     val colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
 
