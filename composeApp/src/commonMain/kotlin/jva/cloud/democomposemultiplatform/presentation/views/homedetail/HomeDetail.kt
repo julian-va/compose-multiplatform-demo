@@ -30,12 +30,14 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import democomposemultiplatform.composeapp.generated.resources.Res
 import democomposemultiplatform.composeapp.generated.resources.back_content_description
+import democomposemultiplatform.composeapp.generated.resources.ic_broken_image
 import democomposemultiplatform.composeapp.generated.resources.product_details_title
 import jva.cloud.democomposemultiplatform.domain.model.Product
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.homedetail.HomeDetailVieModel
 import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageFromApi
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Serializable
@@ -90,7 +92,8 @@ private fun ProductDetailContent(product: Product, paddingValues: PaddingValues)
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(4f / 3f)
+                        .aspectRatio(4f / 3f),
+                    error = painterResource(resource = Res.drawable.ic_broken_image)
                 )
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(

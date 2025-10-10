@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import democomposemultiplatform.composeapp.generated.resources.Res
+import democomposemultiplatform.composeapp.generated.resources.ic_broken_image
 import democomposemultiplatform.composeapp.generated.resources.log_out_button
 import democomposemultiplatform.composeapp.generated.resources.products_title
 import jva.cloud.democomposemultiplatform.domain.model.Product
@@ -35,6 +36,7 @@ import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicat
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
 import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageFromApi
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -88,7 +90,8 @@ private fun ProductItem(goToDetail: (Int) -> Unit, product: Product) {
             model = reprocessImageFromApi(product.images),
             contentDescription = product.title,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize().aspectRatio(2 / 3f).clip(MaterialTheme.shapes.small)
+            modifier = Modifier.fillMaxSize().aspectRatio(2 / 3f).clip(MaterialTheme.shapes.small),
+            error = painterResource(resource = Res.drawable.ic_broken_image)
         )
         Text(text = product.title, style = MaterialTheme.typography.titleMedium)
     }
