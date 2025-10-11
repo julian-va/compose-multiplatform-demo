@@ -34,4 +34,11 @@
     <string name="error_creating_account">There was an error creating the account.</string>
     <string name="success_title">Success!</string>
     <string name="log_out_button">Log Out</string>
+
+    <!-- Error View -->
+    <string name="warning_icon">Warning Icon</string>
+    <string name="error_view_default_error">Something went wrong</string>
+    <string name="try_again">Try again</string>
+    <string name="error_view_preview_error_1">Failed to load data.</string>
+    <string name="error_view_preview_error_2">An unexpected error occurred.</string>
 </resources>
