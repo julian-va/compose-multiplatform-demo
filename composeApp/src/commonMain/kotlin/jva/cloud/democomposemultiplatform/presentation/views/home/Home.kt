@@ -39,7 +39,7 @@ import jva.cloud.democomposemultiplatform.presentation.components.ErrorView
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieModelState
-import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageFromApi
+import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageListFromApi
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -111,7 +111,7 @@ private fun HomeContent(
 private fun ProductItem(goToDetail: (Int) -> Unit, product: Product) {
     Column(modifier = Modifier.clickable(onClick = { goToDetail(product.id) })) {
         AsyncImage(
-            model = reprocessImageFromApi(product.images),
+            model = reprocessImageListFromApi(product.images),
             contentDescription = product.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize().aspectRatio(2 / 3f).clip(MaterialTheme.shapes.small),
