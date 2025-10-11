@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package jva.cloud.democomposemultiplatform.presentation.views.homedetail
 
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -33,8 +36,10 @@ import democomposemultiplatform.composeapp.generated.resources.back_content_desc
 import democomposemultiplatform.composeapp.generated.resources.ic_broken_image
 import democomposemultiplatform.composeapp.generated.resources.product_details_title
 import jva.cloud.democomposemultiplatform.domain.model.Product
+import jva.cloud.democomposemultiplatform.presentation.components.ErrorView
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.homedetail.HomeDetailVieModel
+import jva.cloud.democomposemultiplatform.presentation.viewmodel.homedetail.HomeDetailVieModelState
 import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageFromApi
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
@@ -43,11 +48,26 @@ import org.jetbrains.compose.resources.stringResource
 @Serializable
 data class HomeDetail(val id: Int)
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HomeDetailView(vm: HomeDetailVieModel, onBack: () -> Unit) {
-    val state = vm.state
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val state: HomeDetailVieModelState = vm.state
+    val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    
+    if (state.error) {
+        ErrorView(onRetry = onBack)
+    } else {
+        HomeDetailContent(scrollBehavior = scrollBehavior, state = state, onBack = onBack)
+    }
+}
+
+
+@Composable
+private fun HomeDetailContent(
+    scrollBehavior: TopAppBarScrollBehavior,
+    state: HomeDetailVieModelState,
+    onBack: () -> Unit
+) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -73,6 +93,7 @@ fun HomeDetailView(vm: HomeDetailVieModel, onBack: () -> Unit) {
         }
     }
 }
+
 
 @Composable
 private fun ProductDetailContent(product: Product, paddingValues: PaddingValues) {

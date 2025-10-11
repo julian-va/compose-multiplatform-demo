@@ -17,15 +17,20 @@ class ProductNetworkRepositoryImpl(private val client: HttpClient) : ProductNetw
         const val ERROR_FETCHING_PRODUCT = "Error fetching product. Status:"
     }
 
-    override suspend fun retrieveAllProducts(): List<Product> {
-        val response: HttpResponse =
-            client.get(urlString = ENDPOINT_PRODUCTS)
-        if (response.status.isSuccess()) {
-            val productNetworkEntity: List<ProductNetworkEntity> = response.body()
-            return productNetworkEntity.map { productNetworkEntity -> productNetworkEntity.toDomain() }
-        } else {
-            throw Exception("Error: ${response.status.value}")
+    override suspend fun retrieveAllProducts(): Result<List<Product>> {
+        return try {
+            val response: HttpResponse =
+                client.get(urlString = ENDPOINT_PRODUCTS)
+            if (response.status.isSuccess()) {
+                val productNetworkEntity: List<ProductNetworkEntity> = response.body()
+                Result.success(productNetworkEntity.map { productNetworkEntity -> productNetworkEntity.toDomain() })
+            } else {
+                Result.failure(Exception("$ERROR_FETCHING_PRODUCT ${response.status.value}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(exception = e)
         }
+
     }
 
     override suspend fun retrieveProductById(id: Int): Result<Product> {

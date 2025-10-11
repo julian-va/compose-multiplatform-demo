@@ -22,7 +22,7 @@ class HomeDetailVieModel(
             result.onSuccess { product ->
                 state = state.copy(product = product, isLoading = false)
             }.onFailure { error ->
-                state = state.copy(isLoading = false, error = error.message)
+                state = state.copy(isLoading = false, error = true)
             }
 
         }

@@ -23,14 +23,20 @@ class HomeVieMode(
 
     fun retrieverAllProduct() {
         viewModelScope.launch {
-            val products: List<Product> = retrieverProducts.retrieveAllProducts()
-            state = state.copy(isLoading = false, products = products)
+            val result: Result<List<Product>> = retrieverProducts.retrieveAllProducts()
+            result.onSuccess { products ->
+                state = state.copy(isLoading = false, products = products)
+            }
+            result.onFailure {
+                state = state.copy(isLoading = false, products = emptyList(), error = true)
+            }
         }
     }
 
-    fun logOut() {
+    fun logOut(goToLogin: () -> Unit) {
         viewModelScope.launch {
             logOutUser.logOutUser()
+            goToLogin()
         }
     }
 

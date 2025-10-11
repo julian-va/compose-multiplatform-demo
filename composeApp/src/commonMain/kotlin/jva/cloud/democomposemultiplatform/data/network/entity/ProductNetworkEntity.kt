@@ -17,7 +17,7 @@ data class ProductNetworkEntity(
     @SerialName("images")
     val images: List<String>,
     @SerialName("price")
-    val price: Int,
+    val price: String,
     @SerialName("slug")
     val slug: String,
     @SerialName("title")

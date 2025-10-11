@@ -6,7 +6,7 @@ import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFrom
 
 class RetrieverAllProductFromRemoteImpl(private val productNetworkRepository: ProductNetworkRepository) :
     RetrieverAllProductFromRemote {
-    override suspend fun retrieveAllProducts(): List<Product> {
+    override suspend fun retrieveAllProducts(): Result<List<Product>> {
         return productNetworkRepository.retrieveAllProducts()
     }
 }

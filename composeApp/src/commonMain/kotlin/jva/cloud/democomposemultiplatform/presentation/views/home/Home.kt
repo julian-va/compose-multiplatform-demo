@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package jva.cloud.democomposemultiplatform.presentation.views.home
 
 import androidx.compose.foundation.clickable
@@ -20,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,8 +35,10 @@ import democomposemultiplatform.composeapp.generated.resources.ic_broken_image
 import democomposemultiplatform.composeapp.generated.resources.log_out_button
 import democomposemultiplatform.composeapp.generated.resources.products_title
 import jva.cloud.democomposemultiplatform.domain.model.Product
+import jva.cloud.democomposemultiplatform.presentation.components.ErrorView
 import jva.cloud.democomposemultiplatform.presentation.components.LoadingIndicator
 import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieMode
+import jva.cloud.democomposemultiplatform.presentation.viewmodel.home.HomeVieModelState
 import jva.cloud.democomposemultiplatform.utils.UtilsApp.reprocessImageFromApi
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
@@ -43,11 +48,31 @@ import org.koin.compose.viewmodel.koinViewModel
 @Serializable
 object Home
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HomeView(goToDetail: (Int) -> Unit, goToLogin: () -> Unit, vm: HomeVieMode = koinViewModel()) {
-    val state = vm.state
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val state: HomeVieModelState = vm.state
+    val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    if (state.error) {
+        ErrorView(onRetry = { vm.logOut(goToLogin = goToLogin) })
+    } else {
+        HomeContent(
+            state = state,
+            goToDetail = goToDetail,
+            logOutUser = { vm.logOut(goToLogin = goToLogin) },
+            scrollBehavior = scrollBehavior
+        )
+    }
+}
+
+@Composable
+private fun HomeContent(
+    state: HomeVieModelState,
+    goToDetail: (Int) -> Unit,
+    logOutUser: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior
+) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -57,8 +82,7 @@ fun HomeView(goToDetail: (Int) -> Unit, goToLogin: () -> Unit, vm: HomeVieMode =
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(onClick = {
-                        vm.logOut()
-                        goToLogin()
+                        logOutUser()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Logout,
