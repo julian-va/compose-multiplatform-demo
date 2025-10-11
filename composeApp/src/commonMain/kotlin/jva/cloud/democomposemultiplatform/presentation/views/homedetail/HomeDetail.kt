@@ -5,11 +5,11 @@ package jva.cloud.democomposemultiplatform.presentation.views.homedetail
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -53,7 +55,7 @@ data class HomeDetail(val id: Int)
 fun HomeDetailView(vm: HomeDetailVieModel, onBack: () -> Unit) {
     val state: HomeDetailVieModelState = vm.state
     val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    
+
     if (state.error) {
         ErrorView(onRetry = onBack)
     } else {
@@ -97,6 +99,8 @@ private fun HomeDetailContent(
 
 @Composable
 private fun ProductDetailContent(product: Product, paddingValues: PaddingValues) {
+    val urlListImages: List<String> = product.images
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -107,15 +111,27 @@ private fun ProductDetailContent(product: Product, paddingValues: PaddingValues)
             modifier = Modifier.fillMaxWidth()
         ) {
             Column {
-                AsyncImage(
-                    model = reprocessImageFromApi(product.images),
-                    contentDescription = product.title,
-                    contentScale = ContentScale.Crop,
+                HorizontalMultiBrowseCarousel(
+                    state = rememberCarouselState(itemCount = { urlListImages.count() }),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(4f / 3f),
-                    error = painterResource(resource = Res.drawable.ic_broken_image)
-                )
+                        .wrapContentHeight()
+                        .padding(top = 10.dp, bottom = 10.dp),
+                    preferredItemWidth = 500.dp,
+                    itemSpacing = 10.dp,
+                    contentPadding = PaddingValues(horizontal = 10.dp)
+                ) { urlIndex ->
+                    val url: String = urlListImages[urlIndex]
+                    AsyncImage(
+                        model = reprocessImageFromApi(imagesUrl = url),
+                        contentDescription = product.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        error = painterResource(resource = Res.drawable.ic_broken_image)
+                    )
+                }
+
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = product.title,
