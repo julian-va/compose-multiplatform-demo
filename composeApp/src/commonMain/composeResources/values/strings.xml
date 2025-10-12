@@ -41,4 +41,7 @@
     <string name="try_again">Try again</string>
     <string name="error_view_preview_error_1">Failed to load data.</string>
     <string name="error_view_preview_error_2">An unexpected error occurred.</string>
+
+    <!-- Splash Screen -->
+    <string name="app_logo_content_description">App Logo</string>
 </resources>
