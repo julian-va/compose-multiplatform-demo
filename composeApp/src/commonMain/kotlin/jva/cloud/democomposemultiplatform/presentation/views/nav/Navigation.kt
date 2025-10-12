@@ -15,14 +15,25 @@ import jva.cloud.democomposemultiplatform.presentation.views.homedetail.HomeDeta
 import jva.cloud.democomposemultiplatform.presentation.views.homedetail.HomeDetailView
 import jva.cloud.democomposemultiplatform.presentation.views.login.Login
 import jva.cloud.democomposemultiplatform.presentation.views.login.LoginView
+import jva.cloud.democomposemultiplatform.presentation.views.splash.SplashScreen
+import jva.cloud.democomposemultiplatform.presentation.views.splash.SplashScreenView
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(
-        navController = navController, startDestination = Login
+        navController = navController, startDestination = SplashScreen
     ) {
+        composable<SplashScreen> {
+            SplashScreenView(onTimeout = {
+                navController.navigate(Login) {
+                    popUpTo(SplashScreen) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
         composable<Login> {
             LoginView(
                 redirectHome = {

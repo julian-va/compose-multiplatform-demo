@@ -2,6 +2,7 @@ package jva.cloud.democomposemultiplatform.data.network.repository
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
@@ -15,6 +16,7 @@ class ProductNetworkRepositoryImpl(private val client: HttpClient) : ProductNetw
 
     companion object {
         const val ERROR_FETCHING_PRODUCT = "Error fetching product. Status:"
+        const val ERROR_DELETING_PRODUCT = "Error deleting product. Status:"
     }
 
     override suspend fun retrieveAllProducts(): Result<List<Product>> {
@@ -42,6 +44,20 @@ class ProductNetworkRepositoryImpl(private val client: HttpClient) : ProductNetw
                 Result.success(value = productNetworkEntity.toDomain())
             } else {
                 Result.failure(Exception("$ERROR_FETCHING_PRODUCT ${response.status.value}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(exception = e)
+        }
+    }
+
+    override suspend fun deleteProductById(id: Int): Result<Unit> {
+        return try {
+            val response: HttpResponse = client.delete(urlString = "$ENDPOINT_PRODUCTS/$id")
+
+            if (response.status.isSuccess()) {
+                Result.success(value = Unit)
+            } else {
+                Result.failure(Exception("$ERROR_DELETING_PRODUCT ${response.status.value}"))
             }
         } catch (e: Exception) {
             Result.failure(exception = e)

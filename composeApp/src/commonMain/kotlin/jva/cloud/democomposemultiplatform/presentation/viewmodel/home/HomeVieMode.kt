@@ -6,13 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jva.cloud.democomposemultiplatform.domain.model.Product
+import jva.cloud.democomposemultiplatform.domain.usecase.DeleteProduct
 import jva.cloud.democomposemultiplatform.domain.usecase.LogOutUser
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
 import kotlinx.coroutines.launch
 
 class HomeVieMode(
     private val retrieverProducts: RetrieverAllProductFromRemote,
-    private val logOutUser: LogOutUser
+    private val logOutUser: LogOutUser,
+    private val deleteProduct: DeleteProduct
 ) : ViewModel() {
     var state by mutableStateOf(HomeVieModelState())
         private set
@@ -37,6 +39,20 @@ class HomeVieMode(
         viewModelScope.launch {
             logOutUser.logOutUser()
             goToLogin()
+        }
+    }
+
+    fun deleteProduct(productId: Int) {
+        viewModelScope.launch {
+            val result = deleteProduct.deleteProductById(id = productId)
+            result.onSuccess {
+                state = state.copy(
+                    isLoading = false,
+                    products = state.products.filter { it.id != productId })
+            }.onFailure {
+                state = state.copy(isLoading = false, error = true)
+            }
+
         }
     }
 
