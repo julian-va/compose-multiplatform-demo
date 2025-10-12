@@ -23,12 +23,14 @@ import jva.cloud.democomposemultiplatform.domain.repository.DateStoreRepository
 import jva.cloud.democomposemultiplatform.domain.repository.ProductNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.repository.UserNetworkRepository
 import jva.cloud.democomposemultiplatform.domain.usecase.CreateUser
+import jva.cloud.democomposemultiplatform.domain.usecase.DeleteProduct
 import jva.cloud.democomposemultiplatform.domain.usecase.LogOutUser
 import jva.cloud.democomposemultiplatform.domain.usecase.RememberSession
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverAllProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.RetrieverProductFromRemote
 import jva.cloud.democomposemultiplatform.domain.usecase.SignInUser
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.CreateUserImpl
+import jva.cloud.democomposemultiplatform.domain.usecase.impl.DeleteProductImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.LogOutUserImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RememberSessionImpl
 import jva.cloud.democomposemultiplatform.domain.usecase.impl.RetrieverAllProductFromRemoteImpl
@@ -87,6 +89,7 @@ val useCaseModule = module {
     factory<RetrieverProductFromRemote> { RetrieverProductFromRemoteImpl(get()) }
     factory<LogOutUser> { LogOutUserImpl(dateStoreRepository = get(), rememberSession = get()) }
     factory<RememberSession> { RememberSessionImpl(get()) }
+    factory<DeleteProduct> { DeleteProductImpl(get()) }
     factory<SignInUser> {
         SignInUserImpl(
             userNetworkRepository = get(),
